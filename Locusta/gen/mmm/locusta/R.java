@@ -141,11 +141,14 @@ public final class R {
         public static final int img_97=0x7f02007f;
         public static final int img_98=0x7f020080;
         public static final int img_99=0x7f020081;
+        public static final int splash=0x7f020082;
     }
     public static final class id {
-        public static final int add_event=0x7f070017;
+        public static final int add_event=0x7f070019;
         public static final int button1=0x7f070001;
         public static final int button2=0x7f070012;
+        public static final int error=0x7f070014;
+        public static final int imageView1=0x7f070013;
         public static final int lblDescr=0x7f070004;
         public static final int lblEventType=0x7f070006;
         public static final int lblEventsType=0x7f070010;
@@ -154,10 +157,10 @@ public final class R {
         public static final int lblRadius=0x7f07000c;
         public static final int linearLayout1=0x7f070008;
         public static final int mapview=0x7f070000;
-        public static final int menu_clear_events=0x7f070014;
-        public static final int menu_current_location=0x7f070016;
-        public static final int menu_friends=0x7f070015;
-        public static final int menu_settings=0x7f070013;
+        public static final int menu_clear_events=0x7f070016;
+        public static final int menu_current_location=0x7f070018;
+        public static final int menu_friends=0x7f070017;
+        public static final int menu_settings=0x7f070015;
         public static final int okAdd=0x7f07000a;
         public static final int relativeLayout1=0x7f070009;
         public static final int relativeLayoutSettings=0x7f07000b;
@@ -173,6 +176,7 @@ public final class R {
         public static final int add_event=0x7f030001;
         public static final int map_settings=0x7f030002;
         public static final int speech=0x7f030003;
+        public static final int splash=0x7f030004;
     }
     public static final class menu {
         public static final int activity_locusta_map=0x7f060000;
@@ -190,6 +194,7 @@ public final class R {
         public static final int provider_disabled=0x7f040008;
         public static final int provider_enabled=0x7f040007;
         public static final int provider_new_status=0x7f040009;
+        public static final int welcome=0x7f04000c;
     }
     public static final class style {
         /** 

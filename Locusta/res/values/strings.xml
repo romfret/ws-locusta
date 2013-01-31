@@ -15,6 +15,7 @@
     <string name="provider_new_status">The provider %1$s has now a new status %2$s</string>
     <string name="display_current_location">Current loaction : Latitude = %1$s, Longitude = %2$s</string>
     <string name="event_description">By user : %1$s\nStart date : %2$s\nEnd date : %3$s\nDescription :\n%4$s</string>
+    <string name="welcome">Welcome to Locusta</string>
     
 
 </resources>
