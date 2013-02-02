@@ -16,7 +16,6 @@ public class ErrorActivity extends Activity {
 		
 		
 		String message = (String) this.getIntent().getExtras().get("err_msg");
-//		String message = "Test";
 		((TextView) findViewById(R.id.error_message)).setText(message);
 		
 		

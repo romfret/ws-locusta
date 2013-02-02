@@ -4,24 +4,31 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/welcome" />
-    
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/splash" />
-    
-    <EditText
-        android:id="@+id/error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:ems="10"
-        android:inputType="textPersonName" />
+        android:background="@color/black" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:text="Welcome to Locusta"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="44dp"
+            android:src="@drawable/splash" />
+
+    </RelativeLayout>
     
 </LinearLayout>
