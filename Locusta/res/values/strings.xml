@@ -16,6 +16,7 @@
     <string name="display_current_location">Current loaction : Latitude = %1$s, Longitude = %2$s</string>
     <string name="event_description">By user : %1$s\nStart date : %2$s\nEnd date : %3$s\nDescription :\n%4$s</string>
     <string name="welcome">Welcome to Locusta</string>
+    <string name="exit">Exit Locusta</string>
     
 
 </resources>

@@ -51,56 +51,61 @@ public class MainActivity extends MapActivity implements
 	private Intent intentTTS;
 	
 	private Clock timer;
-
+	
+	private boolean isOnError;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_locusta_map);
 		
-		timer = new Clock();
-
-		// Get map service
-		mapView = (MapView) findViewById(R.id.mapview);
-		mapView.setBuiltInZoomControls(true);
-
-		// Get map controller
-		mapController = mapView.getController();
-		mapController.setZoom(zoomLevel);
-
-		// Add item's icons in a Map
-		itemzedOverlays = new ItemizedOverlaysInitialization().init(this);
-
-		mapOverlays = mapView.getOverlays();
-		// Add items to map
-		for (MapItemizedOverlay item : itemzedOverlays.values()) {
-			mapOverlays.add(item);
-		}
-
-		// Add geolocation
-		// Add user position item marker
-		userLocationOverlay = new UserLocationOverlay(this, mapView);
-		mapOverlays.add(userLocationOverlay);
-		userLocationOverlay.enableMyLocation();
+		isOnError = false;
 
 		// Load the web client
 		webCient = new WebClient();
-		if (webCient.getUserById(1) == null) {
-			showToast("Sorry, server is down !"); // TODO : show error activity
-			System.exit(0);
-		}
-		// Default options
-		loadSettingsActivity();
-		// Load default events
-		addEvents(loadEvents());
+		if (webCient.getUserById(1) != null) {
+			
+			timer = new Clock();
 
-		// Get the current user
-		// currentUser = TemporarySave.getInstance().getCurrentUser(); // TODO restauer quand partie dany ok
-		currentUser = webCient.getUserById(1); // Tests
-		currentUser.setLatitude(userLocationOverlay.getMyLocation().getLatitudeE6() / 1E6);
-		currentUser.setLongitude(userLocationOverlay.getMyLocation().getLongitudeE6() / 1E6);
-		TemporarySave.getInstance().setCurrentUser(currentUser); // TODO: ??
-																	// virer
-																	// !!!!
+			// Get map service
+			mapView = (MapView) findViewById(R.id.mapview);
+			mapView.setBuiltInZoomControls(true);
+
+			// Get map controller
+			mapController = mapView.getController();
+			mapController.setZoom(zoomLevel);
+
+			// Add item's icons in a Map
+			itemzedOverlays = new ItemizedOverlaysInitialization().init(this);
+
+			mapOverlays = mapView.getOverlays();
+			// Add items to map
+			for (MapItemizedOverlay item : itemzedOverlays.values()) {
+				mapOverlays.add(item);
+			}
+
+			// Add geolocation
+			// Add user position item marker
+			userLocationOverlay = new UserLocationOverlay(this, mapView);
+			mapOverlays.add(userLocationOverlay);
+			userLocationOverlay.enableMyLocation();
+			
+			// Default options
+			loadSettingsActivity();
+			// Load default events
+			addEvents(loadEvents());
+
+			// Get the current user
+			// currentUser = TemporarySave.getInstance().getCurrentUser(); // TODO restauer quand partie dany ok
+			currentUser = webCient.getUserById(1); // Tests
+			currentUser.setLatitude(userLocationOverlay.getMyLocation().getLatitudeE6() / 1E6);
+			currentUser.setLongitude(userLocationOverlay.getMyLocation().getLongitudeE6() / 1E6);
+			TemporarySave.getInstance().setCurrentUser(currentUser);
+		} else {
+			// Server is down, locusta can't running anymore
+			launchErrorActivity("Sorry, server is down");
+		}
+
 
 		// // test
 		// Date d = new Date();
@@ -292,29 +297,36 @@ public class MainActivity extends MapActivity implements
 	protected void onResume() {
 		super.onResume();
 		
-		webCient = new WebClient();
-		if (webCient.getUserById(1) == null) {
-			showToast("Sorry, server is down !"); // TODO : show error activity
+		if (isOnError)
 			System.exit(0);
+		
+		webCient = new WebClient();
+		if (webCient.getUserById(1) != null) {
+			// Load settings and add new events
+			loadSettingsActivity();
+			
+			// Add refresh vent timer
+			timer.periodicallyActivate(MainActivity.this, 10000);
+
+//			// Load settings and add new events
+//			loadSettingsActivity();
+//			clearEvents();
+//			addEvents(loadEvents());
+		} else {
+			// Server is down, locusta can't running anymore
+			launchErrorActivity("Sorry, server is down");
 		}
 		
-		// Load settings and add new events
-		loadSettingsActivity();
-		
-		// Add refresh vent timer
-		timer.periodicallyActivate(MainActivity.this, 10000);
 
-//		// Load settings and add new events
-//		loadSettingsActivity();
-//		clearEvents();
-//		addEvents(loadEvents());
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		timer.cancel();
-		webCient = null;
+		if (!isOnError) {
+			timer.cancel();
+			webCient = null;
+		}
 	}
 
 	private void loadSettingsActivity() {
@@ -322,6 +334,13 @@ public class MainActivity extends MapActivity implements
 				Activity.MODE_WORLD_WRITEABLE);
 		radius = sp.getInt("radius", 100);
 		specificEventTypeId = sp.getInt("idEventType", -1);
+	}
+	
+	public void launchErrorActivity(String message) {
+		isOnError = true;
+		Intent intentError = new Intent(MainActivity.this, mmm.locusta.utils.ErrorActivity.class);
+		intentError.putExtra("err_msg", "Sorry, server is down.");
+		startActivity(intentError);
 	}
 
 	// ---------------- Speech recognition ----------------//
