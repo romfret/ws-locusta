@@ -164,6 +164,9 @@ public class MainActivity extends MapActivity implements
 
 			Toast.makeText(getApplicationContext(), "La partie de Dany :)",
 					Toast.LENGTH_SHORT).show();
+			
+			Intent intentSplash = new Intent(MainActivity.this, mmm.locusta.utils.Splash.class);
+			startActivity(intentSplash);
 			break;
 		case R.id.menu_current_location:
 			GeoPoint currentLocation = userLocationOverlay.getMyLocation();

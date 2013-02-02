@@ -45,6 +45,7 @@
         <service android:name="mmm.locusta.speech.TTSService" >
         </service>
         <activity android:name=".utils.ErrorActivity" android:exported="true" android:theme="@android:style/Theme.Black"></activity>
+        <activity android:name=".utils.Splash" android:exported="true" android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
