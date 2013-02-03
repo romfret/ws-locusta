@@ -48,10 +48,10 @@ public class Splash extends Activity {
 				try {
 					WebClient wc = new WebClient();
 					if (wc.getEventTypes() == null)
-						launchErrorActivity("Serveur down!");
+						launchErrorActivity("Device not connected or serveur down!");
 
 				} catch (Exception e) {
-					launchErrorActivity("Serveur down!");
+					launchErrorActivity("Device not connected or serveur down!");
 
 				}
 				if (!isDown) {

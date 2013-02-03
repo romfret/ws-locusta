@@ -250,7 +250,7 @@ public class MainActivity extends MapActivity implements
 	
 	private OverlayItem createOverlayItem(User user) {
 		GeoPoint point = new GeoPoint((int) (user.getLatitude() * 1E6), (int) (user.getLongitude() * 1E6));
-		return new OverlayItem(point, "Un ami à vous", user.getUserName());
+		return new OverlayItem(point, getResources().getString(R.string.friend_toast), user.getUserName());
 	}
 
 	/**

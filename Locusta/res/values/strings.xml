@@ -25,5 +25,6 @@
     <string name="othersFriends">The others</string>
     <string name="ok">OK</string>
     <string name="title_activity_friends">FriendsActivity</string>
+    <string name="friend_toast">One of your friends</string>
 
 </resources>

@@ -224,6 +224,7 @@ public final class R {
         public static final int display_current_location=0x7f06000a;
         public static final int event_description=0x7f06000b;
         public static final int exit=0x7f06000d;
+        public static final int friend_toast=0x7f060018;
         public static final int hello_world=0x7f060001;
         public static final int infoFriends=0x7f060014;
         public static final int menu_clear_events=0x7f060003;
