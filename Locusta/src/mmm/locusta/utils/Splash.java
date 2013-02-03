@@ -58,6 +58,8 @@ public class Splash extends Activity {
 					Intent intent = new Intent(Splash.this,
 							mmm.locusta.authentification.Authentification.class);
 					startActivity(intent);
+					finish();
+					
 				}
 				break;
 			}

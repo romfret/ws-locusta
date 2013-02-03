@@ -20,6 +20,7 @@ public class Authentification extends Activity {
 	@Override
 	public void onBackPressed() {
 		finish();
+		
 	}
 
 	/** Called when the activity is first created. */
