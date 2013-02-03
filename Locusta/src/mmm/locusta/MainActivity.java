@@ -3,6 +3,7 @@ package mmm.locusta;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,8 +35,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-public class MainActivity extends MapActivity implements
-		OnInitListener {
+public class MainActivity extends MapActivity implements OnInitListener {
 
 	private MapView mapView;
 	private MapController mapController;
@@ -51,24 +51,24 @@ public class MainActivity extends MapActivity implements
 	private Integer specificEventTypeId = -1;
 
 	private Intent intentTTS;
-	
+
 	private Clock timer;
-	
+
 	private boolean isOnError;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_locusta_map);
-		
+
 		isOnError = false;
 		setProgressBarIndeterminateVisibility(false);
 
 		// Load the web client
 		webCient = new WebClient();
 		if (webCient.getUserById(1) != null) {
-			
+
 			timer = new Clock();
 
 			// Get map service
@@ -93,23 +93,25 @@ public class MainActivity extends MapActivity implements
 			userLocationOverlay = new UserLocationOverlay(this, mapView);
 			mapOverlays.add(userLocationOverlay);
 			userLocationOverlay.enableMyLocation();
-			
+
 			// Default options
 			loadSettingsActivity();
 			// Load default events
 			addEvents(loadEvents());
 
 			// Get the current user
-			// currentUser = TemporarySave.getInstance().getCurrentUser(); // TODO restauer quand partie dany ok
+			// currentUser = TemporarySave.getInstance().getCurrentUser(); //
+			// TODO restauer quand partie dany ok
 			currentUser = TemporarySave.getInstance().getCurrentUser();
-			currentUser.setLatitude(userLocationOverlay.getMyLocation().getLatitudeE6() / 1E6);
-			currentUser.setLongitude(userLocationOverlay.getMyLocation().getLongitudeE6() / 1E6);
+			currentUser.setLatitude(userLocationOverlay.getMyLocation()
+					.getLatitudeE6() / 1E6);
+			currentUser.setLongitude(userLocationOverlay.getMyLocation()
+					.getLongitudeE6() / 1E6);
 			TemporarySave.getInstance().setCurrentUser(currentUser);
 		} else {
 			// Server is down, locusta can't running anymore
 			launchErrorActivity("Sorry, server is down");
 		}
-
 
 		// // test
 		// Date d = new Date();
@@ -154,7 +156,8 @@ public class MainActivity extends MapActivity implements
 		switch (item.getItemId()) {
 		case R.id.menu_settings:
 
-			Intent intentMapSetings = new Intent(MainActivity.this, MapSettings.class);
+			Intent intentMapSetings = new Intent(MainActivity.this,
+					MapSettings.class);
 			startActivity(intentMapSetings);
 
 			break;
@@ -164,8 +167,9 @@ public class MainActivity extends MapActivity implements
 					Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.menu_friends:
-			
-			Intent intentFriends = new Intent(MainActivity.this, mmm.locusta.friends.FriendsActivity.class);
+
+			Intent intentFriends = new Intent(MainActivity.this,
+					mmm.locusta.friends.FriendsActivity.class);
 			startActivity(intentFriends);
 			break;
 		case R.id.menu_current_location:
@@ -174,11 +178,14 @@ public class MainActivity extends MapActivity implements
 			Geocoder geo = new Geocoder(this);
 			String msg = "";
 			try {
-				List<Address> addresses = geo.getFromLocation(currentLocation.getLatitudeE6() / 1E6, currentLocation.getLongitudeE6() / 1E6, 1);
+				List<Address> addresses = geo.getFromLocation(
+						currentLocation.getLatitudeE6() / 1E6,
+						currentLocation.getLongitudeE6() / 1E6, 1);
 
 				if (addresses != null && addresses.size() >= 1) {
 					Address address = addresses.get(0);
-					msg = String.format("%s, %s %s", address.getAddressLine(0), address.getPostalCode(), address.getLocality());
+					msg = String.format("%s, %s %s", address.getAddressLine(0),
+							address.getPostalCode(), address.getLocality());
 				} else {
 					msg = "No address was found !";
 				}
@@ -191,7 +198,8 @@ public class MainActivity extends MapActivity implements
 					.show();
 			break;
 		case R.id.add_event:
-			Intent intentAddEvent = new Intent(MainActivity.this, mmm.locusta.AddEventActivity.class);
+			Intent intentAddEvent = new Intent(MainActivity.this,
+					mmm.locusta.AddEventActivity.class);
 			startActivity(intentAddEvent);
 			break;
 		default:
@@ -211,10 +219,11 @@ public class MainActivity extends MapActivity implements
 	public void addEvents(Collection<Event> events) {
 		for (Event event : events) {
 			// event.getEventType().getId() is the ID of the item marker
-			itemzedOverlays.get(event.getEventType().getId()).addOverlay(createOverlayItem(event));
+			itemzedOverlays.get(event.getEventType().getId()).addOverlay(
+					createOverlayItem(event));
 		}
 	}
-	
+
 	public void addFriends(Collection<User> friends) {
 		for (User friend : friends) {
 			// event.getEventType().getId() is the ID of the item marker
@@ -228,9 +237,10 @@ public class MainActivity extends MapActivity implements
 	 * @param event
 	 */
 	public void addEvent(Event event) {
-		itemzedOverlays.get(event.getEventType().getId()).addOverlay(createOverlayItem(event));
+		itemzedOverlays.get(event.getEventType().getId()).addOverlay(
+				createOverlayItem(event));
 	}
-	
+
 	public void addFriend(User friend) {
 		itemzedOverlays.get(88).addOverlay(createOverlayItem(friend));
 	}
@@ -243,14 +253,19 @@ public class MainActivity extends MapActivity implements
 	 * @return
 	 */
 	private OverlayItem createOverlayItem(Event event) {
-		GeoPoint point = new GeoPoint((int) (event.getLatitude() * 1E6), (int) (event.getLongitude() * 1E6));
-		return new OverlayItem(point, event.getName(), String.format(getResources().getString(R.string.event_description),
-				event.getOwner().getUserName(), event.getStartDate(), event.getEndDate(), event.getDescription()));
+		GeoPoint point = new GeoPoint((int) (event.getLatitude() * 1E6),
+				(int) (event.getLongitude() * 1E6));
+		return new OverlayItem(point, event.getName(), String.format(
+				getResources().getString(R.string.event_description), event
+						.getOwner().getUserName(), event.getStartDate(), event
+						.getEndDate(), event.getDescription()));
 	}
-	
+
 	private OverlayItem createOverlayItem(User user) {
-		GeoPoint point = new GeoPoint((int) (user.getLatitude() * 1E6), (int) (user.getLongitude() * 1E6));
-		return new OverlayItem(point, getResources().getString(R.string.friend_toast), user.getUserName());
+		GeoPoint point = new GeoPoint((int) (user.getLatitude() * 1E6),
+				(int) (user.getLongitude() * 1E6));
+		return new OverlayItem(point, getResources().getString(
+				R.string.friend_toast), user.getUserName());
 	}
 
 	/**
@@ -261,7 +276,7 @@ public class MainActivity extends MapActivity implements
 			item.clearOverlays();
 		}
 	}
-	
+
 	/**
 	 * Refresh event list
 	 */
@@ -289,7 +304,7 @@ public class MainActivity extends MapActivity implements
 					p.getLatitudeE6() / 1E6, radius, eventType);
 		}
 	}
-	
+
 	private Set<User> loadFriends() {
 		currentUser = TemporarySave.getInstance().getCurrentUser();
 		return currentUser.getFriends();
@@ -310,11 +325,14 @@ public class MainActivity extends MapActivity implements
 		// Set the current user location
 		currentUser.setLatitude(p.getLatitudeE6() / 1E6);
 		currentUser.setLongitude(p.getLongitudeE6() / 1E6);
-		TemporarySave.getInstance().setCurrentUser(currentUser, true); //refresh on bdd
+		TemporarySave.getInstance().setCurrentUser(currentUser, true); // refresh
+																		// on
+																		// bdd
 	}
 
 	public void showToast(String message) {
-		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	// ---------------- Activities ----------------//
@@ -325,24 +343,23 @@ public class MainActivity extends MapActivity implements
 		setProgressBarIndeterminateVisibility(false);
 		if (isOnError)
 			System.exit(0);
-		
+
 		webCient = new WebClient();
 		if (webCient.getEventTypes() != null) {
 			// Load settings and add new events
 			loadSettingsActivity();
-			
+
 			// Add refresh vent timer
 			timer.periodicallyActivate(MainActivity.this, 10000);
 
-//			// Load settings and add new events
-//			loadSettingsActivity();
-//			clearEvents();
-//			addEvents(loadEvents());
+			// // Load settings and add new events
+			// loadSettingsActivity();
+			// clearEvents();
+			// addEvents(loadEvents());
 		} else {
 			// Server is down, locusta can't running anymore
 			launchErrorActivity("Sorry, server is down");
 		}
-		
 
 	}
 
@@ -361,10 +378,11 @@ public class MainActivity extends MapActivity implements
 		radius = sp.getInt("radius", 100);
 		specificEventTypeId = sp.getInt("idEventType", -1);
 	}
-	
+
 	public void launchErrorActivity(String message) {
 		isOnError = true;
-		Intent intentError = new Intent(MainActivity.this, mmm.locusta.utils.ErrorActivity.class);
+		Intent intentError = new Intent(MainActivity.this,
+				mmm.locusta.utils.ErrorActivity.class);
 		intentError.putExtra("err_msg", message);
 		startActivity(intentError);
 		finish();
@@ -398,24 +416,41 @@ public class MainActivity extends MapActivity implements
 				System.out.println(match);
 			}
 
-//			 String firstMatch = matches.get(0);
-//			 String titre = matches.get(1);
-//			 String match3 = matches.get(2); // type
-//			 String type = matches.get(3);
-//			
-//			 if(firstMatch.equals("ajouter")){
-//			 Event event = new Event(titre,)
-//			 event.setEventType(type);
-//			 webCient.addEvent(event)
-//			 }
-
-			System.out.println(matches.get(0));
+			// String firstMatch = matches.get(0);
+			// String titre = matches.get(1);
+			// String match3 = matches.get(2); // type
+			// String type = matches.get(3);
+			//
+			// if(firstMatch.equals("ajouter")){
+			// Event event = new Event(titre,)
+			// event.setEventType(type);
+			// webCient.addEvent(event)
+			// }
 
 			intentTTS = new Intent(this.getApplicationContext(),
 					TTSService.class);
-			intentTTS.putExtra("textToSay", matches.get(0));
-			startService(intentTTS);
+			try {
+				if (matches.get(0).equals("Ajouter")) {
+					Event event = new Event(matches.get(1), matches.get(1),
+							new Date(), currentUser.getLatitude(),
+							currentUser.getLongitude(), currentUser);
+					EventType type = new EventType(matches.get(3));
+					event.setEventType(type);
+					webCient.addEvent(event);
+				}
 
+				intentTTS.putExtra("textToSay", "Evenement" + matches.get(1)
+						+ " de type " + matches.get(3) + "ajouté avec succes");
+
+			} catch (Exception e) {
+				System.err.println("Recognition speech failed :" + e);
+				intentTTS
+						.putExtra(
+								"textToSay",
+								"Veuillez parler plus lentement s'il vous plait. La syntaxe est évenement nom d'evenement type nom de type");
+
+			}
+			startService(intentTTS);
 		}
 	}
 
