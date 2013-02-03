@@ -411,43 +411,31 @@ public class MainActivity extends MapActivity implements OnInitListener {
 			ArrayList<String> matches = data
 					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-			System.out.println("Voici les matches");
-			for (String match : matches) {
-				System.out.println(match);
-			}
-
-			// String firstMatch = matches.get(0);
-			// String titre = matches.get(1);
-			// String match3 = matches.get(2); // type
-			// String type = matches.get(3);
-			//
-			// if(firstMatch.equals("ajouter")){
-			// Event event = new Event(titre,)
-			// event.setEventType(type);
-			// webCient.addEvent(event)
-			// }
-
 			intentTTS = new Intent(this.getApplicationContext(),
 					TTSService.class);
 			try {
+				String typeText = new String();
 				if (matches.get(0).equals("Ajouter")) {
 					Event event = new Event(matches.get(1), matches.get(1),
 							new Date(), currentUser.getLatitude(),
 							currentUser.getLongitude(), currentUser);
-					EventType type = new EventType(matches.get(3));
-					event.setEventType(type);
+					if (matches.size() > 2) {
+						EventType type = new EventType(matches.get(3));
+						event.setEventType(type);
+						typeText = " de type " + matches.get(3);
+					}
 					webCient.addEvent(event);
 				}
 
-				intentTTS.putExtra("textToSay", "Evenement" + matches.get(1)
-						+ " de type " + matches.get(3) + "ajouté avec succes");
+				intentTTS.putExtra("textToSay", "L'évenement" + matches.get(1)
+						+ typeText + "a été ajouté avec succes");
 
 			} catch (Exception e) {
 				System.err.println("Recognition speech failed :" + e);
 				intentTTS
 						.putExtra(
 								"textToSay",
-								"Veuillez parler plus lentement s'il vous plait. La syntaxe est évenement nom d'evenement type nom de type");
+								"Veuillez parler plus lentement s'il vous plait. La syntaxe est évenement nom d'évenement type nom de type");
 
 			}
 			startService(intentTTS);
