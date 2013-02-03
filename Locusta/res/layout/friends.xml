@@ -57,19 +57,18 @@
     <ListView
         android:id="@+id/othersFriends"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="98dp"
+        android:layout_weight="0.67"
         android:choiceMode="multipleChoice"
         android:clickable="true"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
-        android:smoothScrollbar="true" >
-    </ListView>
+        android:smoothScrollbar="true" />
 
     <Button
         android:id="@+id/buttonQuit"
-        android:layout_width="154dp"
-        android:layout_height="wrap_content"
-        android:text="@string/ok"
-        android:layout_gravity="right" />
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="@string/ok" />
 
 </LinearLayout>   
