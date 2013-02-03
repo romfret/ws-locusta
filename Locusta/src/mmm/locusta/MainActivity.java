@@ -47,7 +47,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	private UserLocationOverlay userLocationOverlay;
 
 	private User currentUser;
-	private WebClient webCient;
+	private WebClient webClient;
 	private Integer specificEventTypeId = -1;
 
 	private Intent intentTTS;
@@ -66,8 +66,8 @@ public class MainActivity extends MapActivity implements OnInitListener {
 		setProgressBarIndeterminateVisibility(false);
 
 		// Load the web client
-		webCient = new WebClient();
-		if (webCient.getUserById(1) != null) {
+		webClient = new WebClient();
+		if (webClient.getUserById(1) != null) {
 
 			timer = new Clock();
 
@@ -295,12 +295,12 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	private List<Event> loadEvents() {
 		GeoPoint p = userLocationOverlay.getMyLocation();
 		if (specificEventTypeId == -1)
-			return webCient.lookEventsAround(p.getLongitudeE6() / 1E6,
+			return webClient.lookEventsAround(p.getLongitudeE6() / 1E6,
 					p.getLatitudeE6() / 1E6, radius);
 		else {
-			EventType eventType = webCient
+			EventType eventType = webClient
 					.getEventTypeById(specificEventTypeId);
-			return webCient.lookEventsAround(p.getLongitudeE6() / 1E6,
+			return webClient.lookEventsAround(p.getLongitudeE6() / 1E6,
 					p.getLatitudeE6() / 1E6, radius, eventType);
 		}
 	}
@@ -344,8 +344,8 @@ public class MainActivity extends MapActivity implements OnInitListener {
 		if (isOnError)
 			System.exit(0);
 
-		webCient = new WebClient();
-		if (webCient.getEventTypes() != null) {
+		webClient = new WebClient();
+		if (webClient.getEventTypes() != null) {
 			// Load settings and add new events
 			loadSettingsActivity();
 
@@ -368,7 +368,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 		super.onPause();
 		if (!isOnError) {
 			timer.cancel();
-			webCient = null;
+			webClient = null;
 		}
 	}
 
@@ -424,7 +424,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 						event.setEventType(type);
 						typeText = " de type " + matches.get(3);
 					}
-					webCient.addEvent(event);
+					webClient.addEvent(event);
 				}
 
 				intentTTS.putExtra("textToSay", "L'évenement" + matches.get(1)
@@ -435,7 +435,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 				intentTTS
 						.putExtra(
 								"textToSay",
-								"Veuillez parler plus lentement s'il vous plait. La syntaxe est évenement nom d'évenement type nom de type");
+								"Veuillez parler plus lentement s'il vous plait. La syntaxe est la suivante évenement nom d'évenement type nom de type");
 
 			}
 			startService(intentTTS);

@@ -73,7 +73,6 @@ public class TTSService extends Service implements OnInitListener,
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		System.out.println("tante"+intent.getStringExtra("textToSay"));
 		str = intent.getStringExtra("textToSay");
 		return super.onStartCommand(intent, flags, startId);
 	}
