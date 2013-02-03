@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:text="@string/infoFriends"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/smallText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="#DDD"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/yourFriends"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/blue" />
+
+    <ListView
+        android:id="@+id/yourFriends"
+        android:layout_width="match_parent"
+        android:layout_height="168dp"
+        android:choiceMode="multipleChoice"
+        android:clickable="true"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:smoothScrollbar="true" >
+    </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="#DDD"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/othersFriends"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/blue" />
+
+    <ListView
+        android:id="@+id/othersFriends"
+        android:layout_width="match_parent"
+        android:layout_height="186dp"
+        android:choiceMode="multipleChoice"
+        android:clickable="true"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:smoothScrollbar="true" >
+    </ListView>
+
+    <Button
+        android:id="@+id/buttonQuit"
+        android:layout_width="154dp"
+        android:layout_height="wrap_content"
+        android:text="@string/ok"
+        android:layout_gravity="right" />
+
+</LinearLayout>   

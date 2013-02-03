@@ -5,7 +5,7 @@
 .metadata
 target/
 */bin
-
+./Servers
 *.class
 
 # Package Files #

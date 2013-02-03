@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import mmm.locusta.map.MapSettings;
 import mmm.locusta.map.item.ItemizedOverlaysInitialization;
@@ -23,6 +24,7 @@ import android.speech.tts.TextToSpeech.OnInitListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -57,9 +59,11 @@ public class MainActivity extends MapActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_locusta_map);
 		
 		isOnError = false;
+		setProgressBarIndeterminateVisibility(false);
 
 		// Load the web client
 		webCient = new WebClient();
@@ -97,7 +101,7 @@ public class MainActivity extends MapActivity implements
 
 			// Get the current user
 			// currentUser = TemporarySave.getInstance().getCurrentUser(); // TODO restauer quand partie dany ok
-			currentUser = webCient.getUserById(1); // Tests
+			currentUser = TemporarySave.getInstance().getCurrentUser();
 			currentUser.setLatitude(userLocationOverlay.getMyLocation().getLatitudeE6() / 1E6);
 			currentUser.setLongitude(userLocationOverlay.getMyLocation().getLongitudeE6() / 1E6);
 			TemporarySave.getInstance().setCurrentUser(currentUser);
@@ -160,13 +164,9 @@ public class MainActivity extends MapActivity implements
 					Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.menu_friends:
-			// TODO La partie de Dany :)
-
-			Toast.makeText(getApplicationContext(), "La partie de Dany :)",
-					Toast.LENGTH_SHORT).show();
 			
-			Intent intentSplash = new Intent(MainActivity.this, mmm.locusta.utils.Splash.class);
-			startActivity(intentSplash);
+			Intent intentFriends = new Intent(MainActivity.this, mmm.locusta.friends.FriendsActivity.class);
+			startActivity(intentFriends);
 			break;
 		case R.id.menu_current_location:
 			GeoPoint currentLocation = userLocationOverlay.getMyLocation();
@@ -214,6 +214,13 @@ public class MainActivity extends MapActivity implements
 			itemzedOverlays.get(event.getEventType().getId()).addOverlay(createOverlayItem(event));
 		}
 	}
+	
+	public void addFriends(Collection<User> friends) {
+		for (User friend : friends) {
+			// event.getEventType().getId() is the ID of the item marker
+			itemzedOverlays.get(88).addOverlay(createOverlayItem(friend));
+		}
+	}
 
 	/**
 	 * Add only one event on the map
@@ -222,6 +229,10 @@ public class MainActivity extends MapActivity implements
 	 */
 	public void addEvent(Event event) {
 		itemzedOverlays.get(event.getEventType().getId()).addOverlay(createOverlayItem(event));
+	}
+	
+	public void addFriend(User friend) {
+		itemzedOverlays.get(88).addOverlay(createOverlayItem(friend));
 	}
 
 	/**
@@ -235,6 +246,11 @@ public class MainActivity extends MapActivity implements
 		GeoPoint point = new GeoPoint((int) (event.getLatitude() * 1E6), (int) (event.getLongitude() * 1E6));
 		return new OverlayItem(point, event.getName(), String.format(getResources().getString(R.string.event_description),
 				event.getOwner().getUserName(), event.getStartDate(), event.getEndDate(), event.getDescription()));
+	}
+	
+	private OverlayItem createOverlayItem(User user) {
+		GeoPoint point = new GeoPoint((int) (user.getLatitude() * 1E6), (int) (user.getLongitude() * 1E6));
+		return new OverlayItem(point, "Un ami à vous", user.getUserName());
 	}
 
 	/**
@@ -253,6 +269,7 @@ public class MainActivity extends MapActivity implements
 		showToast("Refresh");
 		clearEvents();
 		addEvents(loadEvents());
+		addFriends(loadFriends());
 	}
 
 	/**
@@ -272,6 +289,11 @@ public class MainActivity extends MapActivity implements
 					p.getLatitudeE6() / 1E6, radius, eventType);
 		}
 	}
+	
+	private Set<User> loadFriends() {
+		currentUser = TemporarySave.getInstance().getCurrentUser();
+		return currentUser.getFriends();
+	}
 
 	// ----------- Location ------------------//
 
@@ -288,6 +310,7 @@ public class MainActivity extends MapActivity implements
 		// Set the current user location
 		currentUser.setLatitude(p.getLatitudeE6() / 1E6);
 		currentUser.setLongitude(p.getLongitudeE6() / 1E6);
+		TemporarySave.getInstance().setCurrentUser(currentUser, true); //refresh on bdd
 	}
 
 	public void showToast(String message) {
@@ -299,12 +322,12 @@ public class MainActivity extends MapActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+		setProgressBarIndeterminateVisibility(false);
 		if (isOnError)
 			System.exit(0);
 		
 		webCient = new WebClient();
-		if (webCient.getUserById(1) != null) {
+		if (webCient.getEventTypes() != null) {
 			// Load settings and add new events
 			loadSettingsActivity();
 			
@@ -342,8 +365,9 @@ public class MainActivity extends MapActivity implements
 	public void launchErrorActivity(String message) {
 		isOnError = true;
 		Intent intentError = new Intent(MainActivity.this, mmm.locusta.utils.ErrorActivity.class);
-		intentError.putExtra("err_msg", "Sorry, server is down.");
+		intentError.putExtra("err_msg", message);
 		startActivity(intentError);
+		finish();
 	}
 
 	// ---------------- Speech recognition ----------------//
@@ -374,16 +398,16 @@ public class MainActivity extends MapActivity implements
 				System.out.println(match);
 			}
 
-			// String firstMatch = matches.get(0);
-			// String titre = matches.get(1);
-			// String match3 = matches.get(2); // type
-			// String type = matches.get(3);
-			//
-			// if(firstMatch.equals("ajouter")){
-			// Event event = new Event(titre,)
-			// event.setEventType(type);
-			// webCient.addEvent(event)
-			// }
+//			 String firstMatch = matches.get(0);
+//			 String titre = matches.get(1);
+//			 String match3 = matches.get(2); // type
+//			 String type = matches.get(3);
+//			
+//			 if(firstMatch.equals("ajouter")){
+//			 Event event = new Event(titre,)
+//			 event.setEventType(type);
+//			 webCient.addEvent(event)
+//			 }
 
 			System.out.println(matches.get(0));
 

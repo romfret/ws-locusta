@@ -7,6 +7,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,6 +23,7 @@ public class AddEventActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.add_event);
 
 		Spinner spinner = (Spinner) findViewById(R.id.spinnerEventType);
@@ -60,25 +62,22 @@ public class AddEventActivity extends Activity {
 		b.setText("Please wait...");
 		b.setEnabled(false);
 		final Activity self = this;
+		setProgressBarIndeterminateVisibility(true);
 		Thread t = new Thread(new Runnable() {
 			public void run() {
+				
 				EventType et = null;
-				System.err.println("=============>     " + "begin");
 				if (selectedId != -1)
 					et = wc.getEventTypeById(selectedId);
 				else {
-					System.err.println("=======> erreur d'id de eventtype "
-							+ selectedId);
 					return;
 				}
-				System.err.println("=========================> " + selectedId);
 				EditText nameV = (EditText) findViewById(R.id.txtName);
 				String name = nameV.getText().toString();
 				EditText descrV = (EditText) findViewById(R.id.txtDescr);
 				String description = descrV.getText().toString();
 				Date now = new Date();
 				User current = TemporarySave.getInstance().getCurrentUser();
-				System.err.println("=================> user " + current);
 				if (current == null) {
 					System.err
 							.println("===== > SUndifined user, application exit");
@@ -86,11 +85,12 @@ public class AddEventActivity extends Activity {
 				}
 				Event e = new Event(name, description, now, current.getLongitude(), current.getLatitude(), current);
 				e.setEventType(et);
-				wc.addEvent(e);
+				wc.addEvent(e);				
 				self.finish();
 			}
 		});
 		t.start();
+		setProgressBarIndeterminateVisibility(false);
 
 	}
 }

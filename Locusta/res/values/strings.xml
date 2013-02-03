@@ -8,8 +8,6 @@
     <string name="menu_friends">Friends</string>
     <string name="menu_current_location">Current location</string>
     <string name="add_event">Add event</string>
-    
-    
     <string name="provider_enabled">The provider %s is now enabled</string>
     <string name="provider_disabled">The provider %s is now disabled</string>
     <string name="provider_new_status">The provider %1$s has now a new status %2$s</string>
@@ -17,6 +15,15 @@
     <string name="event_description">By user : %1$s\nStart date : %2$s\nEnd date : %3$s\nDescription :\n%4$s</string>
     <string name="welcome">Welcome to Locusta</string>
     <string name="exit">Exit Locusta</string>
-    
+    <string name="pseudo">pseudo</string>
+    <string name="pass">pass</string>
+    <string name="valider">valider</string>
+    <string name="newUser">Nouvel utilisateur</string>
+    <string name="creer">Créer</string>
+    <string name="yourFriends">Vos amis</string>
+    <string name="infoFriends">Cochez les personnes pour qu\'elles deviennent vos amis, décochez les pour les supprimer</string>
+    <string name="othersFriends">Les autres</string>
+    <string name="ok">Ok</string>
+    <string name="title_activity_friends">FriendsActivity</string>
 
 </resources>

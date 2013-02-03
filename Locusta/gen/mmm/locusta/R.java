@@ -12,9 +12,15 @@ public final class R {
     }
     public static final class color {
         public static final int black=0x7f040001;
+        public static final int blue=0x7f040004;
         public static final int green=0x7f040002;
         public static final int red=0x7f040000;
         public static final int white=0x7f040003;
+    }
+    public static final class dimen {
+        public static final int listHeightItem=0x7f050002;
+        public static final int smallText=0x7f050001;
+        public static final int title=0x7f050000;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
@@ -150,62 +156,92 @@ public final class R {
         public static final int splash=0x7f020082;
     }
     public static final class id {
-        public static final int add_event=0x7f08001c;
-        public static final int button1=0x7f080001;
-        public static final int button2=0x7f080015;
-        public static final int button_exit=0x7f08000c;
-        public static final int error_message=0x7f08000d;
-        public static final int imageView1=0x7f080017;
-        public static final int label_error=0x7f08000b;
-        public static final int lblDescr=0x7f080004;
-        public static final int lblEventType=0x7f080006;
-        public static final int lblEventsType=0x7f080013;
-        public static final int lblMeters=0x7f080011;
-        public static final int lblName=0x7f080002;
-        public static final int lblRadius=0x7f08000f;
-        public static final int linearLayout1=0x7f080008;
-        public static final int mapview=0x7f080000;
-        public static final int menu_clear_events=0x7f080019;
-        public static final int menu_current_location=0x7f08001b;
-        public static final int menu_friends=0x7f08001a;
-        public static final int menu_settings=0x7f080018;
-        public static final int okAdd=0x7f08000a;
-        public static final int relativeLayout1=0x7f080009;
-        public static final int relativeLayoutSettings=0x7f08000e;
-        public static final int seekbarRadius=0x7f080012;
-        public static final int speech_io_text=0x7f080014;
-        public static final int spinnerEventType=0x7f080007;
-        public static final int spinnerEventTypes=0x7f080010;
-        public static final int textView1=0x7f080016;
-        public static final int txtDescr=0x7f080005;
-        public static final int txtName=0x7f080003;
+        public static final int CreateButton=0x7f090012;
+        public static final int EditText01=0x7f090017;
+        public static final int TextView01=0x7f090016;
+        public static final int add_event=0x7f09002c;
+        public static final int button1=0x7f090001;
+        public static final int button2=0x7f090026;
+        public static final int buttonQuit=0x7f09001e;
+        public static final int button_exit=0x7f090019;
+        public static final int editText1=0x7f09000f;
+        public static final int editText2=0x7f090011;
+        public static final int error=0x7f090014;
+        public static final int error_message=0x7f09001a;
+        public static final int id=0x7f09000e;
+        public static final int imageView1=0x7f090027;
+        public static final int label_error=0x7f090018;
+        public static final int lblDescr=0x7f090004;
+        public static final int lblEventType=0x7f090006;
+        public static final int lblEventsType=0x7f090024;
+        public static final int lblMeters=0x7f090022;
+        public static final int lblName=0x7f090002;
+        public static final int lblRadius=0x7f090020;
+        public static final int linearLayout1=0x7f090008;
+        public static final int linearLayout4=0x7f090015;
+        public static final int linearLayout5=0x7f09000c;
+        public static final int mapview=0x7f090000;
+        public static final int menu_clear_events=0x7f090029;
+        public static final int menu_current_location=0x7f09002b;
+        public static final int menu_friends=0x7f09002a;
+        public static final int menu_settings=0x7f090028;
+        public static final int okAdd=0x7f09000a;
+        public static final int othersFriends=0x7f09001d;
+        public static final int pswd=0x7f090010;
+        public static final int relativeLayout1=0x7f090009;
+        public static final int relativeLayoutSettings=0x7f09001f;
+        public static final int seekbarRadius=0x7f090023;
+        public static final int speech_io_text=0x7f090025;
+        public static final int spinnerEventType=0x7f090007;
+        public static final int spinnerEventTypes=0x7f090021;
+        public static final int textView1=0x7f09000b;
+        public static final int textView2=0x7f09001b;
+        public static final int textView3=0x7f09000d;
+        public static final int txtDescr=0x7f090005;
+        public static final int txtName=0x7f090003;
+        public static final int valider=0x7f090013;
+        public static final int yourFriends=0x7f09001c;
     }
     public static final class layout {
         public static final int activity_locusta_map=0x7f030000;
         public static final int add_event=0x7f030001;
-        public static final int error_activity=0x7f030002;
-        public static final int map_settings=0x7f030003;
-        public static final int speech=0x7f030004;
-        public static final int splash=0x7f030005;
+        public static final int authentification=0x7f030002;
+        public static final int create_user=0x7f030003;
+        public static final int error_activity=0x7f030004;
+        public static final int friends=0x7f030005;
+        public static final int map_settings=0x7f030006;
+        public static final int speech=0x7f030007;
+        public static final int splash=0x7f030008;
     }
     public static final class menu {
-        public static final int activity_locusta_map=0x7f070000;
+        public static final int activity_friends=0x7f080000;
+        public static final int activity_locusta_map=0x7f080001;
     }
     public static final class string {
-        public static final int add_event=0x7f050006;
-        public static final int app_name=0x7f050000;
-        public static final int display_current_location=0x7f05000a;
-        public static final int event_description=0x7f05000b;
-        public static final int exit=0x7f05000d;
-        public static final int hello_world=0x7f050001;
-        public static final int menu_clear_events=0x7f050003;
-        public static final int menu_current_location=0x7f050005;
-        public static final int menu_friends=0x7f050004;
-        public static final int menu_settings=0x7f050002;
-        public static final int provider_disabled=0x7f050008;
-        public static final int provider_enabled=0x7f050007;
-        public static final int provider_new_status=0x7f050009;
-        public static final int welcome=0x7f05000c;
+        public static final int add_event=0x7f060006;
+        public static final int app_name=0x7f060000;
+        public static final int creer=0x7f060012;
+        public static final int display_current_location=0x7f06000a;
+        public static final int event_description=0x7f06000b;
+        public static final int exit=0x7f06000d;
+        public static final int hello_world=0x7f060001;
+        public static final int infoFriends=0x7f060014;
+        public static final int menu_clear_events=0x7f060003;
+        public static final int menu_current_location=0x7f060005;
+        public static final int menu_friends=0x7f060004;
+        public static final int menu_settings=0x7f060002;
+        public static final int newUser=0x7f060011;
+        public static final int ok=0x7f060016;
+        public static final int othersFriends=0x7f060015;
+        public static final int pass=0x7f06000f;
+        public static final int provider_disabled=0x7f060008;
+        public static final int provider_enabled=0x7f060007;
+        public static final int provider_new_status=0x7f060009;
+        public static final int pseudo=0x7f06000e;
+        public static final int title_activity_friends=0x7f060017;
+        public static final int valider=0x7f060010;
+        public static final int welcome=0x7f06000c;
+        public static final int yourFriends=0x7f060013;
     }
     public static final class style {
         /** 
@@ -218,10 +254,10 @@ public final class R {
             backward-compatibility can go here.
         
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f070001;
     }
 }
