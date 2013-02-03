@@ -56,19 +56,19 @@ public class Authentification extends Activity {
 				User user = myConnection.findUser();
 				TextView labelError = (TextView) findViewById(R.id.error);
 				if (user == null) {
-					Toast.makeText(getApplicationContext(), "MAUVAIS USER",
+					Toast.makeText(getApplicationContext(), "BAD USER",
 							Toast.LENGTH_SHORT).show();
-					labelError.setText("Utilisateur inconnu");
+					labelError.setText("Unknown user");
 
 				}
 
 				else if (user.getPass() == null) {
 					Toast.makeText(getApplicationContext(), "MAUVAIS PASSWORD",
 							Toast.LENGTH_SHORT).show();
-					labelError.setText("Mot de passe incorrect");
+					labelError.setText("Password incorrect");
 				} else {
 					Toast.makeText(getApplicationContext(),
-							"CONNEXION REUSSIE", Toast.LENGTH_SHORT).show();
+							"SUCCESSFUL", Toast.LENGTH_SHORT).show();
 					TemporarySave.getInstance().setCurrentUser(user);
 
 					Intent intent = new Intent(Authentification.this,
@@ -83,17 +83,17 @@ public class Authentification extends Activity {
 
 	}
 
-	// //Méthode qui se déclenchera lorsque vous appuierez sur le bouton menu du
-	// téléphone
+	// //Mï¿½thode qui se dï¿½clenchera lorsque vous appuierez sur le bouton menu du
+	// tï¿½lï¿½phone
 	// public boolean onCreateOptionsMenu(Menu menu) {
 	//
-	// //Création d'un MenuInflater qui va permettre d'instancier un Menu XML en
+	// //Crï¿½ation d'un MenuInflater qui va permettre d'instancier un Menu XML en
 	// un objet Menu
 	// MenuInflater inflater = getMenuInflater();
-	// //Instanciation du menu XML spécifier en un objet Menu
+	// //Instanciation du menu XML spï¿½cifier en un objet Menu
 	// inflater.inflate(R.layout.menu, menu);
 	//
-	// //Il n'est pas possible de modifier l'icône d'entête du sous-menu via le
+	// //Il n'est pas possible de modifier l'icï¿½ne d'entï¿½te du sous-menu via le
 	// fichier XML on le fait donc en JAVA
 	// menu.getItem(0).getSubMenu().setHeaderIcon(R.drawable.ic_launcher2);
 	//

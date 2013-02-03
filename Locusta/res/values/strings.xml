@@ -17,13 +17,13 @@
     <string name="exit">Exit Locusta</string>
     <string name="pseudo">pseudo</string>
     <string name="pass">pass</string>
-    <string name="valider">valider</string>
+    <string name="valider">Validate</string>
     <string name="newUser">Nouvel utilisateur</string>
-    <string name="creer">Créer</string>
-    <string name="yourFriends">Vos amis</string>
-    <string name="infoFriends">Cochez les personnes pour qu\'elles deviennent vos amis, décochez les pour les supprimer</string>
-    <string name="othersFriends">Les autres</string>
-    <string name="ok">Ok</string>
+    <string name="creer">Create</string>
+    <string name="yourFriends">Your friends</string>
+    <string name="infoFriends">People checked are your future friends</string>
+    <string name="othersFriends">The others</string>
+    <string name="ok">OK</string>
     <string name="title_activity_friends">FriendsActivity</string>
 
 </resources>

@@ -44,17 +44,17 @@ public class CreateUser extends Activity {
 				if (user != null) {
 					Toast.makeText(getApplicationContext(), "USER EXISTANT",
 							Toast.LENGTH_SHORT).show();
-					labelError.setText("Utilisateur déjà existant");
+					labelError.setText("Utilisateur deja existant");
 
 				}
 
-				else if (pswdOnClick.equals(pswdOnClick2)) {
+				else if (!pswdOnClick.equals(pswdOnClick2)) {
 					Toast.makeText(getApplicationContext(),
 							"PASSWORD DIFFERENTS", Toast.LENGTH_SHORT).show();
-					labelError.setText("Mots de passe différents");
+					labelError.setText("Passwords are differents");
 				} else {
 					setProgressBarIndeterminateVisibility(true);
-					Toast.makeText(getApplicationContext(), "UTILISATEUR CREE",
+					Toast.makeText(getApplicationContext(), "User is created",
 							Toast.LENGTH_SHORT).show();
 					myConnection.saveUser(idOnClick, pswdOnClick2);
 					setProgressBarIndeterminateVisibility(false);
