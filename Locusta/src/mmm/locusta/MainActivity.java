@@ -484,6 +484,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 				}
 				startService(intentAddEvent);
 				intentTTS.putExtra("textToSay", "évènement " + currentEventNameToAdd + "ajouté.");
+				startService(intentTTS);
 			}
 		}
 	}
