@@ -64,7 +64,7 @@ public class AddEventService extends Service {
 				User current = TemporarySave.getInstance().getCurrentUser();
 				if (current == null) {
 					System.err
-							.println("===== > SUndifined user, application exit");
+							.println("===== > Undifined user, application exit");
 					return;
 				}
 				Event e = new Event(name, description, now, current.getLongitude(), current.getLatitude(), current);

@@ -425,43 +425,53 @@ public class MainActivity extends MapActivity implements OnInitListener {
 					TTSService.class);
 			intentAddEvent = new Intent(this.getApplicationContext(),
 					AddEventService.class);
-			
+
 			System.out.println(matches);
 
-			String typeText = new String();
 			// String phraseEntiere = ((String)matches.get(0));
 			String phraseEntiere = "ajouter restaurant de type restaurant";
 			String[] mots = phraseEntiere.split(" ");
 			int motsSize = mots.length;
 
-			if (mots[0].equals("ajouter")) {
-				intentAddEvent.putExtra("name", mots[1]);
-				if (motsSize > 2) {
-					if (mots[2].equals("de") && mots[3].equals("type")) {
+			if (mots[0].equals("ajouter")) { // "ajouter"
+				intentAddEvent.putExtra("name", mots[1]); // "ajouter <nomEvenement>"
+				String typeText = new String();
+				if (motsSize > 2) { // si quelquechose a été prononcé après "ajouter <nomEvenement>"
+					int i = 0;
+
+					if (mots[2].equals("de") && mots[3].equals("type")) { // "ajouter <nomEvenement> de type"
+						i = 4;
+					} else if (mots[2].equals("type")) { // "ajouter <nomEvenement> type"
+						i = 3;
+					}
+
+					if (i > 0) { // "ajouter <nomEvenement> type"
 						for (EventType et : webClient.getEventTypes()) {
-							if (et.getName().equals(mots[4])) {
-								intentAddEvent.putExtra("typeId", et.getId());
+							if (et.getName().equals(mots[i])) { // "ajouter <nomEvenement> type <typeReconnu>"
+								intentAddEvent.putExtra("typeId", et.getId()); // "ajouter <nomEvenement> type <typeReconnu>"
+								typeText = " de type " + mots[i];
 							}
 						}
-						typeText = " de type " + mots[4];
-						startService(intentAddEvent);
-						intentTTS.putExtra("textToSay",
-								"évènement " + mots[1] + typeText
-										+ "ajouté.");
-					} else if (mots[2].equals("type")) {
-						for (EventType et : webClient.getEventTypes()) {
-							if (et.getName().equals(mots[3])) {
-								intentAddEvent.putExtra("typeId", et.getId());
+						
+						if (motsSize > i+1){
+							if (mots[i+1].equals("description")){
+								String description = new String();
+								
+								for (int j=i+2; j<motsSize; j++){
+									description = description + " " + mots[j];
+								}
+								
+								intentAddEvent.putExtra("description", description); // "ajouter <nomEvenement> type <typeReconnu> description <description>"
+								typeText = " , la description est " + description;
 							}
 						}
-						typeText = " de type " + mots[3];
-						startService(intentAddEvent);
-						intentTTS.putExtra("textToSay",
-								"évènement " + mots[1] + typeText
-										+ "ajouté.");
 					}
 				}
-			} else if (mots[0].equals("lister")) {
+				startService(intentAddEvent);
+				intentTTS.putExtra("textToSay", "évènement " + mots[1]
+						+ typeText + "ajouté.");
+
+			} else if (mots[0].equals("lister")) { // "lister"
 				User u = TemporarySave.getInstance().getCurrentUser();
 				List<Event> events = webClient.lookEventsAround(
 						u.getLongitude(), u.getLatitude(), radius);
