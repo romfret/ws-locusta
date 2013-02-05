@@ -6,24 +6,15 @@ import java.util.List;
 
 import mmm.locusta.Event;
 import mmm.locusta.EventType;
-import mmm.locusta.R;
 import mmm.locusta.TemporarySave;
 import mmm.locusta.User;
 import mmm.locusta.WebClient;
-import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 
-public class addEventService extends Service {
+public class AddEventService extends Service {
 
 	private List<Integer> et_ids = new ArrayList<Integer>();
 	private WebClient wc;

@@ -6,12 +6,11 @@ import mmm.locusta.WebClient;
 
 
 public class Connection{
-	private String id, password, inBuff;
+	private String id, password;
 
 	public Connection(String id, String password){
 		this.id = id;
 		this.password = password;
-		inBuff="";
 	}
 
 	public User findUser(){

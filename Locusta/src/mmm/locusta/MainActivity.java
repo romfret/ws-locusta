@@ -3,11 +3,11 @@ package mmm.locusta;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import mmm.locusta.addEvent.AddEventService;
 import mmm.locusta.map.MapSettings;
 import mmm.locusta.map.item.ItemizedOverlaysInitialization;
 import mmm.locusta.map.item.MapItemizedOverlay;
@@ -51,6 +51,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	private Integer specificEventTypeId = -1;
 
 	private Intent intentTTS;
+	private Intent intentAddEvent;
 
 	private Clock timer;
 
@@ -103,16 +104,16 @@ public class MainActivity extends MapActivity implements OnInitListener {
 			// currentUser = TemporarySave.getInstance().getCurrentUser(); //
 			// TODO restauer quand partie dany ok
 			currentUser = TemporarySave.getInstance().getCurrentUser();
-			
-			if(currentUser!=null){
+
+			if (currentUser != null) {
 				System.out.println("null");
 			}
-			
+
 			currentUser.setLatitude(userLocationOverlay.getMyLocation()
 					.getLatitudeE6() / 1E6);
 			currentUser.setLongitude(userLocationOverlay.getMyLocation()
 					.getLongitudeE6() / 1E6);
-			
+
 			TemporarySave.getInstance().setCurrentUser(currentUser);
 		} else {
 			// Server is down, locusta can't running anymore
@@ -411,6 +412,9 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (intentTTS != null)
 			stopService(intentTTS);
+		if (intentAddEvent != null)
+			stopService(intentAddEvent);
+
 		if (resultCode != RESULT_OK && requestCode == VOICE_RECOGNITION_REQUEST)
 			return;
 		if (requestCode == VOICE_RECOGNITION_REQUEST && resultCode == RESULT_OK) {
@@ -419,53 +423,56 @@ public class MainActivity extends MapActivity implements OnInitListener {
 
 			intentTTS = new Intent(this.getApplicationContext(),
 					TTSService.class);
+			intentAddEvent = new Intent(this.getApplicationContext(),
+					AddEventService.class);
+			
 			System.out.println(matches);
-			
-			
-			
-				String typeText = new String();
-//				String phraseEntiere = ((String)matches.get(0));
-				String phraseEntiere = "ajouter restaurant de type restaurant";
-				String[] mots = phraseEntiere.split(" ");
-				int motsSize = mots.length;
-				for(int i=0; i<motsSize; i++){
-					System.out.println("mots["+i+"] = "+mots[i]);
-				}
-				
 
-				System.out.println("ajouter?");
-				if (mots[0].equals("ajouter")) {
-					System.out.println("ajouter!");
-					Event event = new Event(mots[1], mots[1],
-							new Date(), currentUser.getLatitude(),
-							currentUser.getLongitude(), currentUser);
-					
-					if (motsSize > 2) {
-						System.out.println("de type?");
-						if(mots[2].equals("de") && mots[3].equals("type")){
-							System.out.println("de type!");
-							EventType type =  new EventType(mots[4]);
-							typeText = " de type " + mots[4];
-							event.setEventType(type);
-						} else if (mots[2].equals("type")){
-							System.out.println("type!");
-							EventType type = new EventType(mots[3]);
-							typeText = " de type " + mots[3];
-							event.setEventType(type);
+			String typeText = new String();
+			// String phraseEntiere = ((String)matches.get(0));
+			String phraseEntiere = "ajouter restaurant de type restaurant";
+			String[] mots = phraseEntiere.split(" ");
+			int motsSize = mots.length;
+
+			if (mots[0].equals("ajouter")) {
+				intentAddEvent.putExtra("name", mots[1]);
+				if (motsSize > 2) {
+					if (mots[2].equals("de") && mots[3].equals("type")) {
+						for (EventType et : webClient.getEventTypes()) {
+							if (et.getName().equals(mots[4])) {
+								intentAddEvent.putExtra("typeId", et.getId());
+							}
 						}
-						
+						typeText = " de type " + mots[4];
+						startService(intentAddEvent);
+						intentTTS.putExtra("textToSay",
+								"évènement " + mots[1] + typeText
+										+ "ajouté.");
+					} else if (mots[2].equals("type")) {
+						for (EventType et : webClient.getEventTypes()) {
+							if (et.getName().equals(mots[3])) {
+								intentAddEvent.putExtra("typeId", et.getId());
+							}
+						}
+						typeText = " de type " + mots[3];
+						startService(intentAddEvent);
+						intentTTS.putExtra("textToSay",
+								"évènement " + mots[1] + typeText
+										+ "ajouté.");
 					}
-					webClient.addEvent(event);
-					intentTTS.putExtra("textToSay", "L'évènement " + matches.get(1)
-							+ typeText + "a été ajouté avec succès");
-				} else {
-
-				intentTTS
-				.putExtra(
-						"textToSay",
-						"Veuillez parler plus lentement s'il vous plait. La syntaxe est la suivante : évènement nom d'évènement, type, nom de type");
 				}
-
+			} else if (mots[0].equals("lister")) {
+				User u = TemporarySave.getInstance().getCurrentUser();
+				List<Event> events = webClient.lookEventsAround(
+						u.getLongitude(), u.getLatitude(), radius);
+				String str = "Voici les évènements à proximité, ";
+				for (Event e : events) {
+					str = str + e.getName() + ", ";
+				}
+				intentTTS.putExtra("textToSay", str);
+			} else {
+				intentTTS.putExtra("textToSay", "Je n'ai pas compris.");
+			}
 			startService(intentTTS);
 		}
 	}

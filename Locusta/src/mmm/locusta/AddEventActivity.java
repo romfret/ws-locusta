@@ -3,7 +3,7 @@ package mmm.locusta;
 import java.util.ArrayList;
 import java.util.List;
 
-import mmm.locusta.addEvent.addEventService;
+import mmm.locusta.addEvent.AddEventService;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +29,7 @@ public class AddEventActivity extends Activity {
 		setContentView(R.layout.add_event);
 
 		intentAddService = new Intent(this.getApplicationContext(),
-			addEventService.class);
+			AddEventService.class);
 		
 		Spinner spinner = (Spinner) findViewById(R.id.spinnerEventType);
 
