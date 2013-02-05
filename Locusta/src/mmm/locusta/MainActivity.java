@@ -56,6 +56,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	private Clock timer;
 
 	private boolean isOnError;
+	private int recognitionState;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_locusta_map);
 
+		recognitionState = 0;
 		isOnError = false;
 		setProgressBarIndeterminateVisibility(false);
 
@@ -399,6 +401,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 
 	private static final int VOICE_RECOGNITION_REQUEST = 0x10101;
 
+	// demarrage de la reconnaissance vocale
 	public void speakBtnClicked(View v) {
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -408,6 +411,11 @@ public class MainActivity extends MapActivity implements OnInitListener {
 		startActivityForResult(intent, VOICE_RECOGNITION_REQUEST);
 	}
 
+	private String currentEventNameToAdd;
+	// retour de la reconnaissance vocale
+	// reconitionState = 0 : n'attend rien
+	// reconitionState = 1 : "Voulez vous définir un type ?"
+	// reconitionState = 2 : "Voulez vous définir une decription ?"
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (intentTTS != null)
@@ -423,67 +431,60 @@ public class MainActivity extends MapActivity implements OnInitListener {
 
 			intentTTS = new Intent(this.getApplicationContext(),
 					TTSService.class);
-			intentAddEvent = new Intent(this.getApplicationContext(),
-					AddEventService.class);
-
-			System.out.println(matches);
-
+			
 			// String phraseEntiere = ((String)matches.get(0));
-			String phraseEntiere = "ajouter restaurant de type restaurant";
-			String[] mots = phraseEntiere.split(" ");
-			int motsSize = mots.length;
-
-			if (mots[0].equals("ajouter")) { // "ajouter"
-				intentAddEvent.putExtra("name", mots[1]); // "ajouter <nomEvenement>"
-				String typeText = new String();
-				if (motsSize > 2) { // si quelquechose a été prononcé après "ajouter <nomEvenement>"
-					int i = 0;
-
-					if (mots[2].equals("de") && mots[3].equals("type")) { // "ajouter <nomEvenement> de type"
-						i = 4;
-					} else if (mots[2].equals("type")) { // "ajouter <nomEvenement> type"
-						i = 3;
+			String phraseEntiere = "ajouter restaurant";
+			
+			if(recognitionState==0){ // n'attendait rien
+				if (phraseEntiere.startsWith("ajouter")) { // "ajouter"
+					intentAddEvent = new Intent(this.getApplicationContext(),
+							AddEventService.class);
+					currentEventNameToAdd = phraseEntiere.substring(9);
+					intentAddEvent.putExtra("name",currentEventNameToAdd ); // "ajouter <nomEvenement>"
+					recognitionState = 1;
+					intentTTS.putExtra("textToSay", "Voulez vous définir un type ?");
+					startService(intentTTS);
+					speakBtnClicked(null);
+					return;
+				} else if (phraseEntiere.startsWith("lister")) { // "lister"
+					User u = TemporarySave.getInstance().getCurrentUser();
+					List<Event> events = webClient.lookEventsAround(
+							u.getLongitude(), u.getLatitude(), radius);
+					String str = "Voici les évènements à proximité, ";
+					for (Event e : events) {
+						str = str + e.getName() + ", ";
 					}
-
-					if (i > 0) { // "ajouter <nomEvenement> type"
-						for (EventType et : webClient.getEventTypes()) {
-							if (et.getName().equals(mots[i])) { // "ajouter <nomEvenement> type <typeReconnu>"
-								intentAddEvent.putExtra("typeId", et.getId()); // "ajouter <nomEvenement> type <typeReconnu>"
-								typeText = " de type " + mots[i];
-							}
-						}
-						
-						if (motsSize > i+1){
-							if (mots[i+1].equals("description")){
-								String description = new String();
-								
-								for (int j=i+2; j<motsSize; j++){
-									description = description + " " + mots[j];
-								}
-								
-								intentAddEvent.putExtra("description", description); // "ajouter <nomEvenement> type <typeReconnu> description <description>"
-								typeText = " , la description est " + description;
-							}
+					intentTTS.putExtra("textToSay", str);
+					startService(intentTTS);
+					return;
+				} else {
+					intentTTS.putExtra("textToSay", "Je n'ai pas compris.");
+					startService(intentTTS);
+					return;
+				}
+				
+			} else if(recognitionState==1) { // attend un type
+				if(phraseEntiere.startsWith("oui")){
+					phraseEntiere = phraseEntiere.substring(4);
+					for (EventType et : webClient.getEventTypes()) {
+						if (phraseEntiere.equals(et.getName())) {
+							intentAddEvent.putExtra("typeId", et.getId());
 						}
 					}
+				}
+				recognitionState = 2;
+				intentTTS.putExtra("textToSay", "Voulez vous définir une description ?");
+				startService(intentTTS);
+				speakBtnClicked(null);
+			
+			} else if(recognitionState==2) { // attends une description
+				if(phraseEntiere.startsWith("oui")){ 
+					phraseEntiere = phraseEntiere.substring(4);
+					intentAddEvent.putExtra("description", phraseEntiere);
 				}
 				startService(intentAddEvent);
-				intentTTS.putExtra("textToSay", "évènement " + mots[1]
-						+ typeText + "ajouté.");
-
-			} else if (mots[0].equals("lister")) { // "lister"
-				User u = TemporarySave.getInstance().getCurrentUser();
-				List<Event> events = webClient.lookEventsAround(
-						u.getLongitude(), u.getLatitude(), radius);
-				String str = "Voici les évènements à proximité, ";
-				for (Event e : events) {
-					str = str + e.getName() + ", ";
-				}
-				intentTTS.putExtra("textToSay", str);
-			} else {
-				intentTTS.putExtra("textToSay", "Je n'ai pas compris.");
+				intentTTS.putExtra("textToSay", "évènement " + currentEventNameToAdd + "ajouté.");
 			}
-			startService(intentTTS);
 		}
 	}
 
