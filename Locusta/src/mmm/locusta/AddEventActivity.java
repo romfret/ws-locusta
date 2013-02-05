@@ -29,8 +29,8 @@ public class AddEventActivity extends Activity {
 		setContentView(R.layout.add_event);
 
 		intentAddService = new Intent(this.getApplicationContext(),
-			AddEventService.class);
-		
+				AddEventService.class);
+
 		Spinner spinner = (Spinner) findViewById(R.id.spinnerEventType);
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -69,31 +69,19 @@ public class AddEventActivity extends Activity {
 		final Activity self = this;
 		setProgressBarIndeterminateVisibility(true);
 
-		
-		
-		
-		
-				
-				
-				if (selectedId != -1)
-					intentAddService.putExtra("typeId", selectedId);
-				else {
-					return;
-				}
-				
-				EditText nameV = (EditText) findViewById(R.id.txtName);
-				String name = nameV.getText().toString();
-				intentAddService.putExtra("name", name);
-				
-				EditText descrV = (EditText) findViewById(R.id.txtDescr);
-				String description = descrV.getText().toString();
-				intentAddService.putExtra("description", description);
-				
-				startService(intentAddService);
-				
-			
-		setProgressBarIndeterminateVisibility(false);
+		intentAddService.putExtra("typeId", selectedId);
 
+		EditText nameV = (EditText) findViewById(R.id.txtName);
+		String name = nameV.getText().toString();
+		intentAddService.putExtra("name", name);
+
+		EditText descrV = (EditText) findViewById(R.id.txtDescr);
+		String description = descrV.getText().toString();
+		intentAddService.putExtra("description", description);
+
+		startService(intentAddService);
+
+		setProgressBarIndeterminateVisibility(false);
 		self.finish();
 	}
 }
