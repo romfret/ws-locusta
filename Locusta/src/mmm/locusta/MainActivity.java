@@ -445,7 +445,6 @@ public class MainActivity extends MapActivity implements OnInitListener {
 					intentTTS.putExtra("textToSay", "Voulez vous définir un type ?");
 					startService(intentTTS);
 					speakBtnClicked(null);
-					return;
 				} else if (phraseEntiere.startsWith("lister")) { // "lister"
 					User u = TemporarySave.getInstance().getCurrentUser();
 					List<Event> events = webClient.lookEventsAround(
@@ -456,11 +455,9 @@ public class MainActivity extends MapActivity implements OnInitListener {
 					}
 					intentTTS.putExtra("textToSay", str);
 					startService(intentTTS);
-					return;
 				} else {
 					intentTTS.putExtra("textToSay", "Je n'ai pas compris.");
 					startService(intentTTS);
-					return;
 				}
 				
 			} else if(recognitionState==1) { // attend un type
