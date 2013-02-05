@@ -432,8 +432,8 @@ public class MainActivity extends MapActivity implements OnInitListener {
 			intentTTS = new Intent(this.getApplicationContext(),
 					TTSService.class);
 			
-			// String phraseEntiere = ((String)matches.get(0));
-			String phraseEntiere = "ajouter restaurant";
+			String phraseEntiere = ((String)matches.get(0));
+			//String phraseEntiere = "ajouter restaurant";
 			
 			if(recognitionState==0){ // n'attendait rien
 				if (phraseEntiere.startsWith("ajouter")) { // "ajouter"
