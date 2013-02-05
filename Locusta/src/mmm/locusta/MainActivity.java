@@ -103,10 +103,16 @@ public class MainActivity extends MapActivity implements OnInitListener {
 			// currentUser = TemporarySave.getInstance().getCurrentUser(); //
 			// TODO restauer quand partie dany ok
 			currentUser = TemporarySave.getInstance().getCurrentUser();
+			
+			if(currentUser!=null){
+				System.out.println("null");
+			}
+			
 			currentUser.setLatitude(userLocationOverlay.getMyLocation()
 					.getLatitudeE6() / 1E6);
 			currentUser.setLongitude(userLocationOverlay.getMyLocation()
 					.getLongitudeE6() / 1E6);
+			
 			TemporarySave.getInstance().setCurrentUser(currentUser);
 		} else {
 			// Server is down, locusta can't running anymore
@@ -413,31 +419,53 @@ public class MainActivity extends MapActivity implements OnInitListener {
 
 			intentTTS = new Intent(this.getApplicationContext(),
 					TTSService.class);
-			try {
+			System.out.println(matches);
+			
+			
+			
 				String typeText = new String();
-				if (matches.get(0).equals("Ajouter")) {
-					Event event = new Event(matches.get(1), matches.get(1),
+//				String phraseEntiere = ((String)matches.get(0));
+				String phraseEntiere = "ajouter restaurant de type restaurant";
+				String[] mots = phraseEntiere.split(" ");
+				int motsSize = mots.length;
+				for(int i=0; i<motsSize; i++){
+					System.out.println("mots["+i+"] = "+mots[i]);
+				}
+				
+
+				System.out.println("ajouter?");
+				if (mots[0].equals("ajouter")) {
+					System.out.println("ajouter!");
+					Event event = new Event(mots[1], mots[1],
 							new Date(), currentUser.getLatitude(),
 							currentUser.getLongitude(), currentUser);
-					if (matches.size() > 2) {
-						EventType type = new EventType(matches.get(3));
-						event.setEventType(type);
-						typeText = " de type " + matches.get(3);
+					
+					if (motsSize > 2) {
+						System.out.println("de type?");
+						if(mots[2].equals("de") && mots[3].equals("type")){
+							System.out.println("de type!");
+							EventType type =  new EventType(mots[4]);
+							typeText = " de type " + mots[4];
+							event.setEventType(type);
+						} else if (mots[2].equals("type")){
+							System.out.println("type!");
+							EventType type = new EventType(mots[3]);
+							typeText = " de type " + mots[3];
+							event.setEventType(type);
+						}
+						
 					}
 					webClient.addEvent(event);
+					intentTTS.putExtra("textToSay", "L'évènement " + matches.get(1)
+							+ typeText + "a été ajouté avec succès");
+				} else {
+
+				intentTTS
+				.putExtra(
+						"textToSay",
+						"Veuillez parler plus lentement s'il vous plait. La syntaxe est la suivante : évènement nom d'évènement, type, nom de type");
 				}
 
-				intentTTS.putExtra("textToSay", "L'évenement" + matches.get(1)
-						+ typeText + "a été ajouté avec succes");
-
-			} catch (Exception e) {
-				System.err.println("Recognition speech failed :" + e);
-				intentTTS
-						.putExtra(
-								"textToSay",
-								"Veuillez parler plus lentement s'il vous plait. La syntaxe est la suivante évenement nom d'évenement type nom de type");
-
-			}
 			startService(intentTTS);
 		}
 	}

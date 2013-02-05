@@ -1,10 +1,11 @@
 package mmm.locusta;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import mmm.locusta.addEvent.addEventService;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +20,7 @@ public class AddEventActivity extends Activity {
 	private List<Integer> et_ids = new ArrayList<Integer>();
 	private int selectedId = -1;
 	private WebClient wc;
+	private Intent intentAddService;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -26,14 +28,15 @@ public class AddEventActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.add_event);
 
+		intentAddService = new Intent(this.getApplicationContext(),
+			addEventService.class);
+		
 		Spinner spinner = (Spinner) findViewById(R.id.spinnerEventType);
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
-		// et_ids.add(-1);
-		// adapter.add("all");
 		wc = new WebClient();
 		List<EventType> ets = wc.getEventTypes();
 		for (EventType et : ets) {
@@ -58,39 +61,39 @@ public class AddEventActivity extends Activity {
 	}
 
 	public void ok(View v) {
+		if (intentAddService != null)
+			stopService(intentAddService);
 		Button b = (Button) findViewById(R.id.okAdd);
 		b.setText("Please wait...");
 		b.setEnabled(false);
 		final Activity self = this;
 		setProgressBarIndeterminateVisibility(true);
-		Thread t = new Thread(new Runnable() {
-			public void run() {
+
+		
+		
+		
+		
 				
-				EventType et = null;
+				
 				if (selectedId != -1)
-					et = wc.getEventTypeById(selectedId);
+					intentAddService.putExtra("typeId", selectedId);
 				else {
 					return;
 				}
+				
 				EditText nameV = (EditText) findViewById(R.id.txtName);
 				String name = nameV.getText().toString();
+				intentAddService.putExtra("name", name);
+				
 				EditText descrV = (EditText) findViewById(R.id.txtDescr);
 				String description = descrV.getText().toString();
-				Date now = new Date();
-				User current = TemporarySave.getInstance().getCurrentUser();
-				if (current == null) {
-					System.err
-							.println("===== > SUndifined user, application exit");
-					return;
-				}
-				Event e = new Event(name, description, now, current.getLongitude(), current.getLatitude(), current);
-				e.setEventType(et);
-				wc.addEvent(e);				
-				self.finish();
-			}
-		});
-		t.start();
+				intentAddService.putExtra("description", description);
+				
+				startService(intentAddService);
+				
+			
 		setProgressBarIndeterminateVisibility(false);
 
+		self.finish();
 	}
 }
