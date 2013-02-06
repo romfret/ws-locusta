@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import mmm.locusta.addEvent.AddEventService;
 import mmm.locusta.map.MapSettings;
 import mmm.locusta.map.item.ItemizedOverlaysInitialization;
 import mmm.locusta.map.item.MapItemizedOverlay;
@@ -56,6 +57,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 
 	private boolean isOnError;
 	private int recognitionState;
+	private boolean lock=false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -284,9 +286,11 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	 * Refresh item list
 	 */
 	public void refreshItems() {
-		clearItems();
-		addEvents(loadEvents());
-		addFriends(loadFriends());
+		if(lock==false){
+			clearItems();
+			addEvents(loadEvents());
+			addFriends(loadFriends());
+		}
 	}
 
 	/**
@@ -295,6 +299,8 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	 * @return event list
 	 */
 	private List<Event> loadEvents() {
+		if(webClient==null)
+			webClient = new WebClient();
 		GeoPoint p = userLocationOverlay.getMyLocation();
 		if (specificEventTypeId == -1)
 			return webClient.lookEventsAround(p.getLongitudeE6() / 1E6,
@@ -396,6 +402,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 
 	// demarrage de la reconnaissance vocale
 	public void speakBtnClicked(View v) {
+		lock = true;
 		Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 		intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
 				RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -408,10 +415,14 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	// retour de la reconnaissance vocale
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(webClient == null)
+			webClient = new WebClient();
+
 		if (intentTTS != null)
 			stopService(intentTTS);
-		if (intentAddEvent != null)
+		if (intentAddEvent != null){
 			stopService(intentAddEvent);
+			}
 
 		if (resultCode != RESULT_OK && requestCode == VOICE_RECOGNITION_REQUEST)
 			return;
@@ -421,21 +432,30 @@ public class MainActivity extends MapActivity implements OnInitListener {
 
 			intentTTS = new Intent(this.getApplicationContext(),
 					TTSService.class);
+			intentAddEvent = new Intent(this.getApplicationContext(), AddEventService.class);
 			
 			String phraseEntiere = ((String)matches.get(0));
+			System.out.println(phraseEntiere);
 			//String phraseEntiere = "ajouter restaurant";
 			
 			if(recognitionState==0){ // n'attendait rien
 				if (phraseEntiere.startsWith("ajouter")) { // "ajouter"
 					//intentAddEvent = new Intent(this.getApplicationContext(),AddEventService.class);
-					currentEventNameToAdd = phraseEntiere.substring(9);
+					currentEventNameToAdd = phraseEntiere.substring(7);
+					System.out.println(currentEventNameToAdd);
 					intentAddEvent.putExtra("name",currentEventNameToAdd ); // "ajouter <nomEvenement>"
 					recognitionState = 1;
-					intentTTS.putExtra("textToSay", "Voulez vous définir un type ?");
+					intentTTS.putExtra("textToSay", new String("Voulez vous définir un type ?"));
 					startService(intentTTS);
 					speakBtnClicked(null);
-				} else if (phraseEntiere.startsWith("lister")) { // "lister"
+				} else if ((phraseEntiere.startsWith("lister")) || (phraseEntiere.startsWith("lycée"))) { // "lister"
 					User u = TemporarySave.getInstance().getCurrentUser();
+					if(u==null){
+						System.out.println("u null");
+					}
+					if(webClient==null){
+						System.out.println("webClient null");
+					}
 					List<Event> events = webClient.lookEventsAround(
 							u.getLongitude(), u.getLatitude(), radius);
 					String str = "Voici les évènements à proximité, ";
@@ -451,7 +471,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 				
 			} else if(recognitionState==1) { // attend un type
 				if(phraseEntiere.startsWith("oui")){
-					phraseEntiere = phraseEntiere.substring(4);
+					phraseEntiere = phraseEntiere.substring(3);
 					for (EventType et : webClient.getEventTypes()) {
 						if (phraseEntiere.equals(et.getName())) {
 							intentAddEvent.putExtra("typeId", et.getId());
@@ -471,8 +491,10 @@ public class MainActivity extends MapActivity implements OnInitListener {
 				startService(intentAddEvent);
 				intentTTS.putExtra("textToSay", "évènement " + currentEventNameToAdd + "ajouté.");
 				startService(intentTTS);
+				recognitionState = 0;
 			}
 		}
+		 lock = false;
 	}
 
 	@Override

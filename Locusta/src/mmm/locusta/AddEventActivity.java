@@ -83,6 +83,6 @@ public class AddEventActivity extends Activity {
 		startService(intentAddService);
 
 		setProgressBarIndeterminateVisibility(false);
-		//self.finish();
+		self.finish();
 	}
 }

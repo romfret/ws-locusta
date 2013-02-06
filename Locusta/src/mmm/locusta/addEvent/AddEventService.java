@@ -30,17 +30,18 @@ public class AddEventService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		if(wc ==null)
+			wc = new WebClient();
 		System.out.println("addService running");
 		EventType et = null;
 		int typeId = intent.getIntExtra("typeId", 0);
 		String description = intent.getStringExtra("description");
 		String name = intent.getStringExtra("name");
 
-		if (typeId != -1)
-			et = wc.getEventTypeById(typeId);
-		else {
+		et = wc.getEventTypeById(typeId);
+		if (et == null)
 			et = wc.getEventTypeById(123); // default type
-		}
+
 		if (description == null) {
 			description = "";
 		}
@@ -56,7 +57,7 @@ public class AddEventService extends Service {
 		wc.addEvent(e);
 		return super.onStartCommand(intent, flags, startId);
 	}
-	
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
