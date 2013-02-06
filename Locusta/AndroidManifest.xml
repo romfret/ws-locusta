@@ -37,6 +37,7 @@
             android:name="mmm.locusta.AddEventActivity"
             android:theme="@android:style/Theme.Black" >
         </activity>
+        
         <activity
             android:name="mmm.locusta.map.MapSettings"
             android:theme="@android:style/Theme.Black" >
@@ -44,7 +45,8 @@
 
         <service android:name="mmm.locusta.speech.TTSService" >
         </service>
-
+ 		<service android:name="mmm.locusta.addEvent.AddEventService" >
+        </service>
         <activity
             android:name="mmm.locusta.utils.ErrorActivity"
             android:exported="true"

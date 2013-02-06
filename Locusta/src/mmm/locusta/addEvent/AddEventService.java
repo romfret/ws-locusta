@@ -12,39 +12,36 @@ import mmm.locusta.WebClient;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
-public class AddEvent {
+public class AddEventService extends Service {
 
 	private List<Integer> et_ids = new ArrayList<Integer>();
 	private WebClient wc;
 
-	public AddEvent(){
-		System.out.println("addService created");
-
+	@Override
+	public void onCreate() {
 		wc = new WebClient();
 		List<EventType> ets = wc.getEventTypes();
 		for (EventType et : ets) {
 			et_ids.add(et.getId());
 		}
-
+		super.onCreate();
 	}
-	
-	public void execute(String name, int typeId, String description) {
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
 		System.out.println("addService running");
 		EventType et = null;
+		int typeId = intent.getIntExtra("typeId", 0);
+		String description = intent.getStringExtra("description");
+		String name = intent.getStringExtra("name");
+
 		if (typeId != -1)
 			et = wc.getEventTypeById(typeId);
 		else {
 			et = wc.getEventTypeById(123); // default type
 		}
-
-		if(name == null){
-			System.out.println("name null");
-		}
-
-		if(description == null){
-			System.out.println("description null");
+		if (description == null) {
 			description = "";
 		}
 
@@ -57,9 +54,13 @@ public class AddEvent {
 				current.getLatitude(), current);
 		e.setEventType(et);
 		wc.addEvent(e);
-		int id = e.getId();
-		System.out.println("id="+id);
-		System.out.println(wc.getEventById(id).getName());
+		return super.onStartCommand(intent, flags, startId);
+	}
+	
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
