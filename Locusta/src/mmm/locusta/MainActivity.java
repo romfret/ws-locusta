@@ -415,6 +415,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	// retour de la reconnaissance vocale
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
 		if(webClient == null)
 			webClient = new WebClient();
 
@@ -432,16 +433,25 @@ public class MainActivity extends MapActivity implements OnInitListener {
 
 			intentTTS = new Intent(this.getApplicationContext(),
 					TTSService.class);
-			intentAddEvent = new Intent(this.getApplicationContext(), AddEventService.class);
 			
 			String phraseEntiere = ((String)matches.get(0));
 			System.out.println(phraseEntiere);
-			//String phraseEntiere = "ajouter restaurant";
+			
+			if(recognitionState==0){
+				phraseEntiere = "ajouter bon restaurant";
+			}
+			if(recognitionState==1){
+				phraseEntiere = "oui restaurant";
+			}
+			if(recognitionState==2){
+				phraseEntiere = "oui une grosse description";
+			}
 			
 			if(recognitionState==0){ // n'attendait rien
 				if (phraseEntiere.startsWith("ajouter")) { // "ajouter"
 					//intentAddEvent = new Intent(this.getApplicationContext(),AddEventService.class);
-					currentEventNameToAdd = phraseEntiere.substring(7);
+					intentAddEvent = new Intent(this.getApplicationContext(), AddEventService.class);
+					currentEventNameToAdd = phraseEntiere.substring(8);
 					System.out.println(currentEventNameToAdd);
 					intentAddEvent.putExtra("name",currentEventNameToAdd ); // "ajouter <nomEvenement>"
 					recognitionState = 1;
@@ -450,12 +460,6 @@ public class MainActivity extends MapActivity implements OnInitListener {
 					speakBtnClicked(null);
 				} else if ((phraseEntiere.startsWith("lister")) || (phraseEntiere.startsWith("lycée"))) { // "lister"
 					User u = TemporarySave.getInstance().getCurrentUser();
-					if(u==null){
-						System.out.println("u null");
-					}
-					if(webClient==null){
-						System.out.println("webClient null");
-					}
 					List<Event> events = webClient.lookEventsAround(
 							u.getLongitude(), u.getLatitude(), radius);
 					String str = "Voici les évènements à proximité, ";

@@ -41,6 +41,7 @@ public class AddEventService extends Service {
 		et = wc.getEventTypeById(typeId);
 		if (et == null)
 			et = wc.getEventTypeById(123); // default type
+		
 
 		if (description == null) {
 			description = "";
@@ -51,9 +52,16 @@ public class AddEventService extends Service {
 		if (current == null) {
 			System.err.println("===== > Undifined user, application exit");
 		}
+		
+
+		System.out.println("type=" + et);
+		System.out.println("name=" + name);
+		System.out.println("desc=" + description);
+		
 		Event e = new Event(name, description, now, current.getLongitude(),
 				current.getLatitude(), current);
 		e.setEventType(et);
+		
 		wc.addEvent(e);
 		return super.onStartCommand(intent, flags, startId);
 	}
