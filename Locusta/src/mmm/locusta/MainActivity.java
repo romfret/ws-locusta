@@ -451,7 +451,6 @@ public class MainActivity extends MapActivity implements OnInitListener {
 			
 			if(recognitionState==0){ // n'attendait rien
 				if (phraseEntiere.startsWith("ajouter")) { // "ajouter"
-					//intentAddEvent = new Intent(this.getApplicationContext(),AddEventService.class);
 					intentAddEvent = new Intent(this.getApplicationContext(), AddEventService.class);
 					currentEventNameToAdd = phraseEntiere.substring(8);
 					System.out.println(currentEventNameToAdd);
@@ -471,7 +470,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 				} else if ((phraseEntiere.startsWith("lister")) || (phraseEntiere.startsWith("lycée"))) { // "lister"
 					User u = TemporarySave.getInstance().getCurrentUser();
 					List<Event> events = webClient.lookEventsAround(
-							u.getLongitude(), u.getLatitude(), radius);
+							u.getLongitude(), u.getLatitude(), 1000);
 					String str = "Voici les évènements à proximité, ";
 					for (Event e : events) {
 						str = str + e.getName() + ", ";
