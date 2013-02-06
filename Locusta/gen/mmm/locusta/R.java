@@ -159,7 +159,7 @@ public final class R {
         public static final int CreateButton=0x7f090012;
         public static final int EditText01=0x7f090017;
         public static final int TextView01=0x7f090016;
-        public static final int add_event=0x7f09002c;
+        public static final int add_event=0x7f09002b;
         public static final int button1=0x7f090001;
         public static final int button2=0x7f090026;
         public static final int buttonQuit=0x7f09001e;
@@ -181,9 +181,8 @@ public final class R {
         public static final int linearLayout4=0x7f090015;
         public static final int linearLayout5=0x7f09000c;
         public static final int mapview=0x7f090000;
-        public static final int menu_clear_events=0x7f090029;
-        public static final int menu_current_location=0x7f09002b;
-        public static final int menu_friends=0x7f09002a;
+        public static final int menu_current_location=0x7f09002a;
+        public static final int menu_friends=0x7f090029;
         public static final int menu_settings=0x7f090028;
         public static final int okAdd=0x7f09000a;
         public static final int othersFriends=0x7f09001d;
@@ -218,31 +217,30 @@ public final class R {
         public static final int activity_locusta_map=0x7f080001;
     }
     public static final class string {
-        public static final int add_event=0x7f060006;
+        public static final int add_event=0x7f060005;
         public static final int app_name=0x7f060000;
-        public static final int creer=0x7f060012;
-        public static final int display_current_location=0x7f06000a;
-        public static final int event_description=0x7f06000b;
-        public static final int exit=0x7f06000d;
-        public static final int friend_toast=0x7f060018;
+        public static final int creer=0x7f060011;
+        public static final int display_current_location=0x7f060009;
+        public static final int event_description=0x7f06000a;
+        public static final int exit=0x7f06000c;
+        public static final int friend_toast=0x7f060017;
         public static final int hello_world=0x7f060001;
-        public static final int infoFriends=0x7f060014;
-        public static final int menu_clear_events=0x7f060003;
-        public static final int menu_current_location=0x7f060005;
-        public static final int menu_friends=0x7f060004;
+        public static final int infoFriends=0x7f060013;
+        public static final int menu_current_location=0x7f060004;
+        public static final int menu_friends=0x7f060003;
         public static final int menu_settings=0x7f060002;
-        public static final int newUser=0x7f060011;
-        public static final int ok=0x7f060016;
-        public static final int othersFriends=0x7f060015;
-        public static final int pass=0x7f06000f;
-        public static final int provider_disabled=0x7f060008;
-        public static final int provider_enabled=0x7f060007;
-        public static final int provider_new_status=0x7f060009;
-        public static final int pseudo=0x7f06000e;
-        public static final int title_activity_friends=0x7f060017;
-        public static final int valider=0x7f060010;
-        public static final int welcome=0x7f06000c;
-        public static final int yourFriends=0x7f060013;
+        public static final int newUser=0x7f060010;
+        public static final int ok=0x7f060015;
+        public static final int othersFriends=0x7f060014;
+        public static final int pass=0x7f06000e;
+        public static final int provider_disabled=0x7f060007;
+        public static final int provider_enabled=0x7f060006;
+        public static final int provider_new_status=0x7f060008;
+        public static final int pseudo=0x7f06000d;
+        public static final int title_activity_friends=0x7f060016;
+        public static final int valider=0x7f06000f;
+        public static final int welcome=0x7f06000b;
+        public static final int yourFriends=0x7f060012;
     }
     public static final class style {
         /** 
