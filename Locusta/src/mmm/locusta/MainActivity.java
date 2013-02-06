@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mmm.locusta.addEvent.AddEventService;
 import mmm.locusta.map.MapSettings;
 import mmm.locusta.map.item.ItemizedOverlaysInitialization;
 import mmm.locusta.map.item.MapItemizedOverlay;
@@ -170,11 +169,6 @@ public class MainActivity extends MapActivity implements OnInitListener {
 			startActivity(intentMapSetings);
 
 			break;
-		case R.id.menu_clear_events:
-			clearEvents();
-			Toast.makeText(getApplicationContext(), "Events cleared",
-					Toast.LENGTH_SHORT).show();
-			break;
 		case R.id.menu_friends:
 
 			Intent intentFriends = new Intent(MainActivity.this,
@@ -280,18 +274,17 @@ public class MainActivity extends MapActivity implements OnInitListener {
 	/**
 	 * clear the event on the map
 	 */
-	public void clearEvents() {
+	public void clearItems() {
 		for (MapItemizedOverlay item : itemzedOverlays.values()) {
 			item.clearOverlays();
 		}
 	}
 
 	/**
-	 * Refresh event list
+	 * Refresh item list
 	 */
-	public void refreshEvents() {
-		showToast("Refresh");
-		clearEvents();
+	public void refreshItems() {
+		clearItems();
 		addEvents(loadEvents());
 		addFriends(loadFriends());
 	}
@@ -411,11 +404,8 @@ public class MainActivity extends MapActivity implements OnInitListener {
 		startActivityForResult(intent, VOICE_RECOGNITION_REQUEST);
 	}
 
-	private String currentEventNameToAdd;
+	private String currentEventNameToAdd = new String();
 	// retour de la reconnaissance vocale
-	// reconitionState = 0 : n'attend rien
-	// reconitionState = 1 : "Voulez vous définir un type ?"
-	// reconitionState = 2 : "Voulez vous définir une decription ?"
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (intentTTS != null)
@@ -437,8 +427,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 			
 			if(recognitionState==0){ // n'attendait rien
 				if (phraseEntiere.startsWith("ajouter")) { // "ajouter"
-					intentAddEvent = new Intent(this.getApplicationContext(),
-							AddEventService.class);
+					//intentAddEvent = new Intent(this.getApplicationContext(),AddEventService.class);
 					currentEventNameToAdd = phraseEntiere.substring(9);
 					intentAddEvent.putExtra("name",currentEventNameToAdd ); // "ajouter <nomEvenement>"
 					recognitionState = 1;

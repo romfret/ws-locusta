@@ -16,7 +16,7 @@ public class Clock {
 				activity.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						activity.refreshEvents();
+						activity.refreshItems();
 					}
 				});
 			}

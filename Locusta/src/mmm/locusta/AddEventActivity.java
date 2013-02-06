@@ -3,7 +3,7 @@ package mmm.locusta;
 import java.util.ArrayList;
 import java.util.List;
 
-import mmm.locusta.addEvent.AddEventService;
+import mmm.locusta.addEvent.AddEvent;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +20,7 @@ public class AddEventActivity extends Activity {
 	private List<Integer> et_ids = new ArrayList<Integer>();
 	private int selectedId = -1;
 	private WebClient wc;
-	private Intent intentAddService;
+	private AddEvent addEvent;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -28,8 +28,8 @@ public class AddEventActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.add_event);
 
-		intentAddService = new Intent(this.getApplicationContext(),
-				AddEventService.class);
+		System.out.println("oncreate");
+		addEvent = new AddEvent();
 
 		Spinner spinner = (Spinner) findViewById(R.id.spinnerEventType);
 
@@ -60,28 +60,26 @@ public class AddEventActivity extends Activity {
 		});
 	}
 
+	
 	public void ok(View v) {
-		if (intentAddService != null)
-			stopService(intentAddService);
+		System.out.println("ok add activy clicked");
 		Button b = (Button) findViewById(R.id.okAdd);
 		b.setText("Please wait...");
 		b.setEnabled(false);
 		final Activity self = this;
 		setProgressBarIndeterminateVisibility(true);
 
-		intentAddService.putExtra("typeId", selectedId);
+		int typeId = selectedId;
 
 		EditText nameV = (EditText) findViewById(R.id.txtName);
 		String name = nameV.getText().toString();
-		intentAddService.putExtra("name", name);
 
 		EditText descrV = (EditText) findViewById(R.id.txtDescr);
 		String description = descrV.getText().toString();
-		intentAddService.putExtra("description", description);
 
-		startService(intentAddService);
+		addEvent.execute(name, typeId, description);
 
 		setProgressBarIndeterminateVisibility(false);
-		self.finish();
+		//self.finish();
 	}
 }
