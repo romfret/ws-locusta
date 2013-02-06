@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import mmm.locusta.addEvent.AddEventService;
 import mmm.locusta.map.MapSettings;
@@ -437,15 +439,15 @@ public class MainActivity extends MapActivity implements OnInitListener {
 			String phraseEntiere = ((String)matches.get(0));
 			System.out.println(phraseEntiere);
 			
-			if(recognitionState==0){
-				phraseEntiere = "ajouter bon restaurant";
-			}
-			if(recognitionState==1){
-				phraseEntiere = "oui restaurant";
-			}
-			if(recognitionState==2){
-				phraseEntiere = "oui une grosse description";
-			}
+//			if(recognitionState==0){
+//				phraseEntiere = "ajouter bon restaurant";
+//			}
+//			if(recognitionState==1){
+//				phraseEntiere = "oui restaurant";
+//			}
+//			if(recognitionState==2){
+//				phraseEntiere = "oui une grosse description";
+//			}
 			
 			if(recognitionState==0){ // n'attendait rien
 				if (phraseEntiere.startsWith("ajouter")) { // "ajouter"
@@ -457,7 +459,15 @@ public class MainActivity extends MapActivity implements OnInitListener {
 					recognitionState = 1;
 					intentTTS.putExtra("textToSay", new String("Voulez vous définir un type ?"));
 					startService(intentTTS);
-					speakBtnClicked(null);
+					Timer timer = new Timer();
+			        timer.schedule(new TimerTask() {
+			            @Override
+			            public void run() {
+			            	speakBtnClicked(null);
+			            }
+			        }, 2000);
+					
+					
 				} else if ((phraseEntiere.startsWith("lister")) || (phraseEntiere.startsWith("lycée"))) { // "lister"
 					User u = TemporarySave.getInstance().getCurrentUser();
 					List<Event> events = webClient.lookEventsAround(
@@ -484,8 +494,15 @@ public class MainActivity extends MapActivity implements OnInitListener {
 				}
 				recognitionState = 2;
 				intentTTS.putExtra("textToSay", "Voulez vous définir une description ?");
-				startService(intentTTS);
-				speakBtnClicked(null);
+		        startService(intentTTS);
+
+				Timer timer = new Timer();
+		        timer.schedule(new TimerTask() {
+		            @Override
+		            public void run() {
+		            	speakBtnClicked(null);
+		            }
+		        }, 2000);
 			
 			} else if(recognitionState==2) { // attends une description
 				if(phraseEntiere.startsWith("oui")){ 
@@ -493,7 +510,7 @@ public class MainActivity extends MapActivity implements OnInitListener {
 					intentAddEvent.putExtra("description", phraseEntiere);
 				}
 				startService(intentAddEvent);
-				intentTTS.putExtra("textToSay", "évènement " + currentEventNameToAdd + "ajouté.");
+				intentTTS.putExtra("textToSay", "évènement, " + currentEventNameToAdd + ", ajouté.");
 				startService(intentTTS);
 				recognitionState = 0;
 			}
